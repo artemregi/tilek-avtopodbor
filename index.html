@@ -138,13 +138,28 @@ header.scrolled{background:rgba(17,17,17,.95);backdrop-filter:blur(16px);-webkit
 .sec-p{font-size:1rem;color:var(--muted);max-width:500px;line-height:1.75;font-weight:300}
 .on-dark .sec-p{color:rgba(255,255,255,.55)}
 
-/* ── PAINS ── */
-.pains-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;margin-top:52px}
-.pain{background:var(--surface);padding:32px 26px;transition:background .2s}
+/* ── PAINS CAROUSEL ── */
+.pains-carousel-wrap{position:relative;margin-top:52px}
+.pains-carousel{display:flex;gap:0;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;border:1px solid var(--border);border-radius:var(--r-lg);background:var(--border)}
+.pains-carousel::-webkit-scrollbar{display:none}
+.pain{background:var(--surface);padding:32px 26px;transition:background .2s;scroll-snap-align:start;flex:0 0 calc(33.333% - 1px);min-width:260px}
 .pain:hover{background:var(--bg)}
 .pain-ico{width:36px;height:36px;margin-bottom:18px;color:var(--amber)}
 .pain-t{font-size:.9375rem;font-weight:500;margin-bottom:8px;line-height:1.3}
 .pain-d{font-size:.8125rem;color:var(--muted);line-height:1.65;font-weight:300}
+.pains-nav{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:24px}
+.pains-arrow{width:40px;height:40px;border-radius:50%;border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;color:var(--muted)}
+.pains-arrow:hover{border-color:var(--amber);color:var(--amber)}
+.pains-arrow:disabled{opacity:.3;cursor:default;pointer-events:none}
+.pains-dots{display:flex;gap:6px;align-items:center}
+.pains-dot{width:6px;height:6px;border-radius:50%;background:var(--border);cursor:pointer;transition:all .25s;border:none;padding:0}
+.pains-dot.active{background:var(--amber);width:20px;border-radius:3px}
+@media(max-width:900px){
+  .pain{flex:0 0 calc(50% - 1px)}
+}
+@media(max-width:560px){
+  .pain{flex:0 0 85vw}
+}
 
 /* ── EXPERT ── */
 .expert-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:64px;border:1px solid rgba(255,255,255,.08);border-radius:var(--r-lg);overflow:hidden}
@@ -232,10 +247,14 @@ header.scrolled{background:rgba(17,17,17,.95);backdrop-filter:blur(16px);-webkit
 .tnum-n span{color:var(--amber)}
 .tnum-l{font-size:.875rem;color:rgba(255,255,255,.45);font-weight:300;line-height:1.5}
 
-/* ── REVIEWS ── */
-.reviews-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:52px}
-.rev{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:26px;transition:all .3s}
+/* ── REVIEWS CAROUSEL ── */
+.reviews-carousel-wrap{position:relative;margin-top:52px}
+.reviews-carousel{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:4px}
+.reviews-carousel::-webkit-scrollbar{display:none}
+.rev{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:26px;transition:all .3s;scroll-snap-align:start;flex:0 0 calc(33.333% - 12px);min-width:260px}
 .rev:hover{border-color:var(--amber);box-shadow:var(--sh)}
+@media(max-width:900px){.rev{flex:0 0 calc(50% - 9px)}}
+@media(max-width:560px){.rev{flex:0 0 82vw}}
 .stars{display:flex;gap:2px;margin-bottom:14px}
 .star{color:#F5A623;font-size:.875rem}
 .rev-text{font-family:var(--font-h);font-style:italic;font-size:1rem;line-height:1.7;color:var(--text);margin-bottom:18px}
@@ -306,8 +325,7 @@ footer{background:var(--dark2);padding:40px 0}
   .expert-photo-wrap{min-height:400px}
 }
 @media(max-width:768px){
-  .svc-grid,.cases-grid,.reviews-grid{grid-template-columns:1fr}
-  .pains-grid{grid-template-columns:1fr}
+  .svc-grid,.cases-grid{grid-template-columns:1fr}
   .gallery-strip{grid-template-columns:repeat(3,1fr)}
   .hstat:not(:first-child){padding-left:16px}
 }
@@ -426,57 +444,68 @@ footer{background:var(--dark2);padding:40px 0}
     <h2 class="sec-h r">Вторичный рынок скрывает<br>больше, чем кажется</h2>
     <p class="sec-p r">Каждый третий автомобиль имеет скрытые дефекты или проблемы с документами. Осмотр — страховка от потери денег.</p>
 
-    <div class="pains-grid">
-      <div class="pain r">
-        <svg class="pain-ico" width="36" height="36" viewBox="0 0 36 36" fill="none">
-          <path d="M18 4L32 28H4L18 4z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-          <path d="M18 15v7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-          <circle cx="18" cy="25" r="1" fill="currentColor"/>
-        </svg>
-        <div class="pain-t">Скрытые повреждения кузова</div>
-        <div class="pain-d">Шпаклёвка под краской, варёные лонжероны, следы серьёзных ДТП — всё это видно только со сканером толщиномера.</div>
+    <div class="pains-carousel-wrap r">
+      <div class="pains-carousel" id="painsCarousel">
+        <div class="pain">
+          <svg class="pain-ico" width="36" height="36" viewBox="0 0 36 36" fill="none">
+            <path d="M18 4L32 28H4L18 4z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+            <path d="M18 15v7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <circle cx="18" cy="25" r="1" fill="currentColor"/>
+          </svg>
+          <div class="pain-t">Скрытые повреждения кузова</div>
+          <div class="pain-d">Шпаклёвка под краской, варёные лонжероны, следы серьёзных ДТП — всё это видно только со сканером толщиномера.</div>
+        </div>
+        <div class="pain">
+          <svg class="pain-ico" width="36" height="36" viewBox="0 0 36 36" fill="none">
+            <circle cx="18" cy="18" r="12" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M18 11v7l5 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <div class="pain-t">Скрученный пробег</div>
+          <div class="pain-d">Откатывают 50–150 тыс. км чтобы завысить цену. Реальный пробег виден по нескольким узлам и по износу деталей.</div>
+        </div>
+        <div class="pain">
+          <svg class="pain-ico" width="36" height="36" viewBox="0 0 36 36" fill="none">
+            <rect x="7" y="9" width="22" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M7 16h22" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M13 22h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <div class="pain-t">Юридические риски</div>
+          <div class="pain-d">Залог у банка, арест, угон, ограничения на регистрацию — вы рискуете потерять машину сразу после покупки.</div>
+        </div>
+        <div class="pain">
+          <svg class="pain-ico" width="36" height="36" viewBox="0 0 36 36" fill="none">
+            <circle cx="18" cy="13" r="5" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M9 28c0-5 4-9 9-9s9 4 9 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <div class="pain-t">Автомобиль из такси</div>
+          <div class="pain-d">Реальный пробег 400–600 тыс. км при показаниях 80 тыс. Износ критический — но внешне всё может выглядеть идеально.</div>
+        </div>
+        <div class="pain">
+          <svg class="pain-ico" width="36" height="36" viewBox="0 0 36 36" fill="none">
+            <path d="M18 6C11 6 6 11 6 18c0 4 2 7.5 5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M18 6c7 0 12 5 12 12 0 4-2 7.5-5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M13 18h10M18 13v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <div class="pain-t">Авто из России</div>
+          <div class="pain-d">Санкционные ограничения на запчасти, нестандартные комплектации, особый режим обслуживания — нужно знать до покупки.</div>
+        </div>
+        <div class="pain">
+          <svg class="pain-ico" width="36" height="36" viewBox="0 0 36 36" fill="none">
+            <path d="M10 28V17l8-9 8 9v11" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+            <rect x="15" y="21" width="6" height="7" rx="1" stroke="currentColor" stroke-width="1.5"/>
+          </svg>
+          <div class="pain-t">Переплата за «идеал»</div>
+          <div class="pain-d">Продавец называет цену выше рынка. Эксперт определит реальную стоимость и поможет торговаться со знанием дефектов.</div>
+        </div>
       </div>
-      <div class="pain r d1">
-        <svg class="pain-ico" width="36" height="36" viewBox="0 0 36 36" fill="none">
-          <circle cx="18" cy="18" r="12" stroke="currentColor" stroke-width="1.5"/>
-          <path d="M18 11v7l5 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
-        <div class="pain-t">Скрученный пробег</div>
-        <div class="pain-d">Откатывают 50–150 тыс. км чтобы завысить цену. Реальный пробег виден по нескольким узлам и по износу деталей.</div>
-      </div>
-      <div class="pain r d2">
-        <svg class="pain-ico" width="36" height="36" viewBox="0 0 36 36" fill="none">
-          <rect x="7" y="9" width="22" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/>
-          <path d="M7 16h22" stroke="currentColor" stroke-width="1.5"/>
-          <path d="M13 22h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
-        <div class="pain-t">Юридические риски</div>
-        <div class="pain-d">Залог у банка, арест, угон, ограничения на регистрацию — вы рискуете потерять машину сразу после покупки.</div>
-      </div>
-      <div class="pain r">
-        <svg class="pain-ico" width="36" height="36" viewBox="0 0 36 36" fill="none">
-          <circle cx="18" cy="13" r="5" stroke="currentColor" stroke-width="1.5"/>
-          <path d="M9 28c0-5 4-9 9-9s9 4 9 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
-        <div class="pain-t">Автомобиль из такси</div>
-        <div class="pain-d">Реальный пробег 400–600 тыс. км при показаниях 80 тыс. Износ критический — но внешне всё может выглядеть идеально.</div>
-      </div>
-      <div class="pain r d1">
-        <svg class="pain-ico" width="36" height="36" viewBox="0 0 36 36" fill="none">
-          <path d="M18 6C11 6 6 11 6 18c0 4 2 7.5 5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-          <path d="M18 6c7 0 12 5 12 12 0 4-2 7.5-5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-          <path d="M13 18h10M18 13v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
-        <div class="pain-t">Авто из России</div>
-        <div class="pain-d">Санкционные ограничения на запчасти, нестандартные комплектации, особый режим обслуживания — нужно знать до покупки.</div>
-      </div>
-      <div class="pain r d2">
-        <svg class="pain-ico" width="36" height="36" viewBox="0 0 36 36" fill="none">
-          <path d="M10 28V17l8-9 8 9v11" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-          <rect x="15" y="21" width="6" height="7" rx="1" stroke="currentColor" stroke-width="1.5"/>
-        </svg>
-        <div class="pain-t">Переплата за «идеал»</div>
-        <div class="pain-d">Продавец называет цену выше рынка. Эксперт определит реальную стоимость и поможет торговаться со знанием дефектов.</div>
+      <div class="pains-nav">
+        <button class="pains-arrow" id="painsPrev" aria-label="Назад">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M10 3L5 8l5 5"/></svg>
+        </button>
+        <div class="pains-dots" id="painsDots"></div>
+        <button class="pains-arrow" id="painsNext" aria-label="Вперёд">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 3l5 5-5 5"/></svg>
+        </button>
       </div>
     </div>
   </div>
@@ -761,54 +790,47 @@ footer{background:var(--dark2);padding:40px 0}
     <h2 class="sec-h r">Клиенты о нашей<br>работе</h2>
     <p class="sec-p r">Реальные отзывы из Instagram — без анонимов.</p>
 
-    <div class="reviews-grid">
-      <div class="rev r">
-        <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
-        <div class="rev-text">«Хотел взять Prado за 18 млн. Тлек нашёл скрутку и следы кузовного ремонта. Продавец уверял — машина "идеальная". Спасибо, что уберёг.»</div>
-        <div class="rev-author">
-          <div class="rev-av">Д</div>
-          <div><div class="rev-name">Дамир А.</div><div class="rev-meta">Алматы · Land Cruiser Prado</div></div>
+    <div class="reviews-carousel-wrap r">
+      <div class="reviews-carousel" id="revsCarousel">
+        <div class="rev">
+          <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+          <div class="rev-text">«Хотел взять Prado за 18 млн. Tilek нашёл скрутку и следы кузовного ремонта. Продавец уверял — машина "идеальная". Спасибо, что уберёг.»</div>
+          <div class="rev-author"><div class="rev-av">Д</div><div><div class="rev-name">Дамир А.</div><div class="rev-meta">Алматы · Land Cruiser Prado</div></div></div>
+        </div>
+        <div class="rev">
+          <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+          <div class="rev-text">«Camry — нашёл мелкие недостатки и помог снизить цену на 400 тысяч. Работой очень доволен, рекомендую всем, кто покупает на вторичке.»</div>
+          <div class="rev-author"><div class="rev-av">А</div><div><div class="rev-name">Алибек С.</div><div class="rev-meta">Астана · Toyota Camry 70</div></div></div>
+        </div>
+        <div class="rev">
+          <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+          <div class="rev-text">«Первый раз покупала авто — боялась нарваться на проблемный. Tilek всё объяснил и нашли чистую машину с первого просмотра.»</div>
+          <div class="rev-author"><div class="rev-av">М</div><div><div class="rev-name">Мадина К.</div><div class="rev-meta">Шымкент · Honda CR-V</div></div></div>
+        </div>
+        <div class="rev">
+          <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+          <div class="rev-text">«Уберёг от Subaru из такси. По виду — отличная, реальный пробег почти 500 тысяч. Деньги сэкономлены, нервы тоже.»</div>
+          <div class="rev-author"><div class="rev-av">Р</div><div><div class="rev-name">Руслан Б.</div><div class="rev-meta">Алматы · Subaru Outback</div></div></div>
+        </div>
+        <div class="rev">
+          <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+          <div class="rev-text">«Звал на несколько просмотров — каждый раз что-то находил. В итоге взяли четвёртый вариант — идеальный. Так и надо работать.»</div>
+          <div class="rev-author"><div class="rev-av">Е</div><div><div class="rev-name">Ерлан Т.</div><div class="rev-meta">Астана · BMW 5 серии</div></div></div>
+        </div>
+        <div class="rev">
+          <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+          <div class="rev-text">«Помог с выбором Li L9. Объяснил нюансы китайских машин, рассказал о сервисе. Машина год — полный порядок. Спасибо за честность!»</div>
+          <div class="rev-author"><div class="rev-av">Н</div><div><div class="rev-name">Нурлан М.</div><div class="rev-meta">Алматы · Li L9</div></div></div>
         </div>
       </div>
-      <div class="rev r d1">
-        <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
-        <div class="rev-text">«Camry — нашёл мелкие недостатки и помог снизить цену на 400 тысяч. Работой очень доволен, рекомендую всем, кто покупает на вторичке.»</div>
-        <div class="rev-author">
-          <div class="rev-av">А</div>
-          <div><div class="rev-name">Алибек С.</div><div class="rev-meta">Астана · Toyota Camry 70</div></div>
-        </div>
-      </div>
-      <div class="rev r d2">
-        <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
-        <div class="rev-text">«Первый раз покупала авто — боялась нарваться на проблемный. Тлек всё объяснил и нашли чистую машину с первого просмотра.»</div>
-        <div class="rev-author">
-          <div class="rev-av">М</div>
-          <div><div class="rev-name">Мадина К.</div><div class="rev-meta">Шымкент · Honda CR-V</div></div>
-        </div>
-      </div>
-      <div class="rev r">
-        <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
-        <div class="rev-text">«Уберёг от Subaru из такси. По виду — отличная, реальный пробег почти 500 тысяч. Деньги сэкономлены, нервы тоже.»</div>
-        <div class="rev-author">
-          <div class="rev-av">Р</div>
-          <div><div class="rev-name">Руслан Б.</div><div class="rev-meta">Алматы · Subaru Outback</div></div>
-        </div>
-      </div>
-      <div class="rev r d1">
-        <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
-        <div class="rev-text">«Звал на несколько просмотров — каждый раз что-то находил. В итоге взяли четвёртый вариант — идеальный. Так и надо работать.»</div>
-        <div class="rev-author">
-          <div class="rev-av">Е</div>
-          <div><div class="rev-name">Ерлан Т.</div><div class="rev-meta">Астана · BMW 5 серии</div></div>
-        </div>
-      </div>
-      <div class="rev r d2">
-        <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
-        <div class="rev-text">«Помог с выбором Li L9. Объяснил нюансы китайских машин, рассказал о сервисе. Машина год — полный порядок. Спасибо за честность!»</div>
-        <div class="rev-author">
-          <div class="rev-av">Н</div>
-          <div><div class="rev-name">Нурлан М.</div><div class="rev-meta">Алматы · Li L9</div></div>
-        </div>
+      <div class="pains-nav">
+        <button class="pains-arrow" id="revsPrev" aria-label="Назад">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M10 3L5 8l5 5"/></svg>
+        </button>
+        <div class="pains-dots" id="revsDots"></div>
+        <button class="pains-arrow" id="revsNext" aria-label="Вперёд">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 3l5 5-5 5"/></svg>
+        </button>
       </div>
     </div>
   </div>
@@ -973,6 +995,60 @@ document.querySelectorAll('.faq-q').forEach(btn => {
     if(!open) item.classList.add('open');
   });
 });
+
+// ── CAROUSEL FACTORY ──
+function initCarousel(carouselId, prevId, nextId, dotsId) {
+  const el = document.getElementById(carouselId);
+  const prev = document.getElementById(prevId);
+  const next = document.getElementById(nextId);
+  const dotsWrap = document.getElementById(dotsId);
+  if (!el) return;
+
+  const cards = el.querySelectorAll(':scope > *');
+  const total = cards.length;
+  let current = 0;
+
+  // Build dots
+  cards.forEach((_, i) => {
+    const d = document.createElement('button');
+    d.className = 'pains-dot' + (i === 0 ? ' active' : '');
+    d.setAttribute('aria-label', `Слайд ${i+1}`);
+    d.addEventListener('click', () => goTo(i));
+    dotsWrap.appendChild(d);
+  });
+
+  function getVisible() {
+    const w = el.clientWidth;
+    const cw = cards[0].offsetWidth;
+    return Math.round(w / cw) || 1;
+  }
+
+  function goTo(idx) {
+    current = Math.max(0, Math.min(idx, total - 1));
+    el.scrollTo({ left: cards[current].offsetLeft, behavior: 'smooth' });
+    updateUI();
+  }
+
+  function updateUI() {
+    const vis = getVisible();
+    dotsWrap.querySelectorAll('.pains-dot').forEach((d, i) => d.classList.toggle('active', i === current));
+    prev.disabled = current === 0;
+    next.disabled = current >= total - vis;
+  }
+
+  prev.addEventListener('click', () => goTo(current - 1));
+  next.addEventListener('click', () => goTo(current + getVisible()));
+
+  el.addEventListener('scroll', () => {
+    const idx = Math.round(el.scrollLeft / (cards[0].offsetWidth || 1));
+    if (idx !== current) { current = idx; updateUI(); }
+  }, { passive: true });
+
+  updateUI();
+}
+
+initCarousel('painsCarousel', 'painsPrev', 'painsNext', 'painsDots');
+initCarousel('revsCarousel', 'revsPrev', 'revsNext', 'revsDots');
 
 // Smooth scroll
 document.querySelectorAll('a[href^="#"]').forEach(a => {
