@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ТЛЕК Автоподбор — Профессиональная проверка авто перед покупкой</title>
+<meta name="description" content="Профессиональная диагностика и проверка автомобиля перед покупкой в Алматы, Астане, Шымкенте и других городах Казахстана.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #F6F3EF;
+  --surface: #FFFFFF;
+  --dark: #111111;
+  --dark2: #1A1A1A;
+  --navy: #1B3A5C;
+  --navy-hover: #142D47;
+  --amber: #E8A020;
+  --amber-dark: #C8880A;
+  --text: #141414;
+  --muted: #706860;
+  --light: #A8A09A;
+  --border: #E4DED6;
+  --border-lt: #EDE8E2;
+  --sand: #EDE8E0;
+  --green: #256648;
+  --red: #B83228;
+  --wa: #25D366;
+
+  --font-h: 'Cormorant Garamond', Georgia, serif;
+  --font-b: 'DM Sans', -apple-system, sans-serif;
+
+  --r: 6px;
+  --r-lg: 14px;
+  --sh: 0 1px 4px rgba(0,0,0,0.07), 0 6px 16px rgba(0,0,0,0.05);
+  --sh-md: 0 4px 12px rgba(0,0,0,0.1), 0 16px 40px rgba(0,0,0,0.08);
+
+  --max: 1140px;
+  --px: clamp(20px, 5vw, 80px);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-b);background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:var(--amber);color:#000}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+
+.wrap{max-width:var(--max);margin:0 auto;padding:0 var(--px)}
+
+/* ── REVEAL ── */
+.r{opacity:0;transform:translateY(20px);transition:opacity .65s cubic-bezier(.25,.46,.45,.94),transform .65s cubic-bezier(.25,.46,.45,.94)}
+.r.in{opacity:1;transform:none}
+.d1{transition-delay:.08s}.d2{transition-delay:.16s}.d3{transition-delay:.24s}.d4{transition-delay:.32s}.d5{transition-delay:.4s}
+
+/* ── NAV ── */
+header{position:fixed;top:0;left:0;right:0;z-index:100;transition:background .3s,border-color .3s;border-bottom:1px solid transparent}
+header.scrolled{background:rgba(17,17,17,.95);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom-color:rgba(255,255,255,.08)}
+.nav{display:flex;align-items:center;justify-content:space-between;height:64px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-icon{width:34px;height:34px;background:var(--amber);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.logo-icon svg{fill:#111}
+.logo-name{font-family:var(--font-h);font-size:1.2rem;font-weight:600;color:#fff;line-height:1}
+.logo-sub{font-size:.625rem;color:rgba(255,255,255,.45);letter-spacing:.08em;text-transform:uppercase}
+
+.nav-links{display:flex;align-items:center;gap:28px;list-style:none}
+.nav-links a{text-decoration:none;color:rgba(255,255,255,.55);font-size:.875rem;font-weight:400;transition:color .2s}
+.nav-links a:hover{color:#fff}
+
+.nav-end{display:flex;align-items:center;gap:10px}
+
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 20px;border-radius:var(--r);font-family:var(--font-b);font-size:.875rem;font-weight:500;text-decoration:none;cursor:pointer;border:none;transition:all .2s;letter-spacing:.01em;white-space:nowrap}
+.btn-amber{background:var(--amber);color:#111}
+.btn-amber:hover{background:var(--amber-dark);transform:translateY(-1px);box-shadow:0 4px 14px rgba(232,160,32,.4)}
+.btn-ghost{background:transparent;color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.2)}
+.btn-ghost:hover{border-color:rgba(255,255,255,.5);color:#fff}
+.btn-dark{background:var(--dark);color:#fff}
+.btn-dark:hover{background:#222;transform:translateY(-1px)}
+.btn-wa{background:var(--wa);color:#fff}
+.btn-wa:hover{background:#1ebe5d;transform:translateY(-1px);box-shadow:0 4px 12px rgba(37,211,102,.35)}
+.btn-lg{padding:13px 30px;font-size:.9375rem}
+.btn-outline-light{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.25)}
+.btn-outline-light:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.5)}
+.btn-outline-dark{background:transparent;color:var(--text);border:1px solid var(--border)}
+.btn-outline-dark:hover{border-color:var(--text);background:var(--text);color:#fff}
+
+.burger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px}
+.burger span{display:block;width:22px;height:1.5px;background:#fff;transition:all .3s}
+
+.mob-nav{display:none;position:fixed;top:64px;left:0;right:0;background:#111;padding:24px var(--px) 32px;z-index:99;flex-direction:column;gap:18px;border-top:1px solid rgba(255,255,255,.08)}
+.mob-nav.open{display:flex}
+.mob-nav a{font-size:1rem;color:rgba(255,255,255,.7);text-decoration:none;font-weight:400}
+
+/* ── HERO ── */
+.hero{min-height:100svh;background:var(--dark);display:grid;grid-template-columns:1fr 42%;position:relative;overflow:hidden;padding-top:64px}
+.hero-left{display:flex;flex-direction:column;justify-content:flex-end;padding:clamp(48px,7vw,96px) 0 clamp(48px,7vw,80px) var(--px);position:relative;z-index:2}
+.hero-right{position:relative;overflow:hidden}
+.hero-photo{width:100%;height:100%;object-fit:cover;object-position:top center;display:block;filter:brightness(.85) contrast(1.05)}
+.hero-photo-overlay{position:absolute;inset:0;background:linear-gradient(to right,var(--dark) 0%,transparent 40%),linear-gradient(to top,var(--dark) 0%,transparent 30%)}
+
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:.6875rem;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);font-weight:500;margin-bottom:24px}
+.hero-eyebrow::before{content:'';display:block;width:18px;height:1.5px;background:var(--amber)}
+
+.hero-h1{font-family:var(--font-h);font-size:clamp(2.75rem,6vw,5.25rem);font-weight:500;line-height:1.05;letter-spacing:-.02em;color:#fff;margin-bottom:24px}
+.hero-h1 em{font-style:italic;color:var(--amber)}
+
+.hero-p{font-size:clamp(.9375rem,1.25vw,1.0625rem);color:rgba(255,255,255,.55);max-width:480px;margin-bottom:40px;line-height:1.75;font-weight:300}
+
+.hero-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:60px}
+
+.hero-stats{display:flex;gap:0;border-top:1px solid rgba(255,255,255,.1);padding-top:36px;max-width:500px}
+.hstat{flex:1}
+.hstat:not(:first-child){border-left:1px solid rgba(255,255,255,.1);padding-left:28px}
+.hstat-n{font-family:var(--font-h);font-size:2rem;font-weight:500;letter-spacing:-.02em;color:#fff;line-height:1;margin-bottom:4px}
+.hstat-l{font-size:.8125rem;color:rgba(255,255,255,.4);font-weight:300;line-height:1.4}
+
+.hero-scroll{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;z-index:3}
+.hero-scroll span{font-size:.625rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3)}
+.hero-scroll-line{width:1px;height:40px;background:linear-gradient(rgba(255,255,255,.3),transparent)}
+
+/* ── SECTION BASICS ── */
+.sec{padding:clamp(72px,11vw,128px) 0}
+.sec-light{background:var(--surface)}
+.sec-dark{background:var(--dark)}
+.sec-navy{background:var(--navy)}
+.sec-sand{background:var(--sand)}
+
+.sec-tag{display:inline-flex;align-items:center;gap:8px;font-size:.6875rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:500;margin-bottom:16px}
+.sec-tag::before{content:'';width:16px;height:1px;background:currentColor;display:block}
+.on-dark .sec-tag{color:rgba(255,255,255,.4)}
+.on-dark .sec-tag::before{background:rgba(255,255,255,.4)}
+
+.sec-h{font-family:var(--font-h);font-size:clamp(2rem,4vw,3.25rem);font-weight:500;line-height:1.08;letter-spacing:-.02em;margin-bottom:14px}
+.on-dark .sec-h{color:#fff}
+
+.sec-p{font-size:1rem;color:var(--muted);max-width:500px;line-height:1.75;font-weight:300}
+.on-dark .sec-p{color:rgba(255,255,255,.55)}
+
+/* ── PAINS ── */
+.pains-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;margin-top:52px}
+.pain{background:var(--surface);padding:32px 26px;transition:background .2s}
+.pain:hover{background:var(--bg)}
+.pain-ico{width:36px;height:36px;margin-bottom:18px;color:var(--amber)}
+.pain-t{font-size:.9375rem;font-weight:500;margin-bottom:8px;line-height:1.3}
+.pain-d{font-size:.8125rem;color:var(--muted);line-height:1.65;font-weight:300}
+
+/* ── EXPERT ── */
+.expert-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:64px;border:1px solid rgba(255,255,255,.08);border-radius:var(--r-lg);overflow:hidden}
+.expert-photo-wrap{position:relative;min-height:520px;background:#1a1a1a;overflow:hidden}
+.expert-photo{width:100%;height:100%;object-fit:cover;object-position:top center;display:block;filter:brightness(.9)}
+.expert-photo-gradient{position:absolute;inset:0;background:linear-gradient(to top,rgba(17,17,17,.6) 0%,transparent 50%)}
+.expert-badge{position:absolute;bottom:24px;left:24px;display:flex;flex-direction:column;gap:4px}
+.expert-badge-name{font-family:var(--font-h);font-size:1.5rem;font-weight:500;color:#fff;line-height:1}
+.expert-badge-role{font-size:.75rem;color:rgba(255,255,255,.55);letter-spacing:.06em;text-transform:uppercase}
+
+.expert-info{background:#1a1a1a;padding:clamp(36px,4vw,56px);display:flex;flex-direction:column;justify-content:center;gap:28px}
+.expert-quote{font-family:var(--font-h);font-size:clamp(1.125rem,2vw,1.5rem);font-style:italic;font-weight:400;line-height:1.55;color:rgba(255,255,255,.85)}
+.expert-quote::before{content:'"';color:var(--amber);font-size:2em;line-height:.5;display:block;margin-bottom:8px}
+.expert-creds{display:flex;flex-direction:column;gap:14px;padding-top:8px;border-top:1px solid rgba(255,255,255,.08)}
+.expert-cred{display:flex;align-items:flex-start;gap:12px;font-size:.875rem;color:rgba(255,255,255,.6);line-height:1.5}
+.expert-cred-dot{width:6px;height:6px;border-radius:50%;background:var(--amber);flex-shrink:0;margin-top:7px}
+.expert-socials{display:flex;gap:12px;padding-top:12px}
+.expert-social{display:inline-flex;align-items:center;gap:7px;padding:8px 16px;border-radius:var(--r);border:1px solid rgba(255,255,255,.15);font-size:.8125rem;color:rgba(255,255,255,.6);text-decoration:none;transition:all .2s}
+.expert-social:hover{border-color:rgba(255,255,255,.4);color:#fff}
+
+/* ── PROCESS ── */
+.process-wrap{margin-top:64px;display:grid;grid-template-columns:repeat(4,1fr);position:relative}
+.process-line{position:absolute;top:27px;left:calc(12.5% + 26px);right:calc(12.5% + 26px);height:1px;background:var(--border);z-index:0}
+.step{padding:0 16px;text-align:center;position:relative;z-index:1}
+.step-n{width:54px;height:54px;border-radius:50%;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-family:var(--font-h);font-size:1.375rem;font-weight:500;color:var(--navy);transition:all .3s;cursor:default}
+.step:hover .step-n{background:var(--amber);border-color:var(--amber);color:#111}
+.step-t{font-size:.9375rem;font-weight:500;margin-bottom:8px}
+.step-d{font-size:.8125rem;color:var(--muted);line-height:1.65;font-weight:300}
+
+/* ── SERVICES ── */
+.svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:52px}
+.svc{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:34px 28px 28px;display:flex;flex-direction:column;position:relative;transition:all .3s}
+.svc:hover{border-color:var(--navy);box-shadow:var(--sh-md);transform:translateY(-3px)}
+.svc.hot{background:var(--dark);border-color:var(--dark)}
+.svc.hot:hover{box-shadow:0 8px 32px rgba(0,0,0,.35);transform:translateY(-3px)}
+.svc-pill{position:absolute;top:-12px;left:22px;background:var(--amber);color:#111;font-size:.6875rem;letter-spacing:.07em;text-transform:uppercase;font-weight:600;padding:4px 13px;border-radius:100px}
+.svc-n{font-family:var(--font-h);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--light);margin-bottom:16px}
+.svc.hot .svc-n{color:rgba(255,255,255,.3)}
+.svc-name{font-family:var(--font-h);font-size:1.625rem;font-weight:500;line-height:1.1;letter-spacing:-.01em;margin-bottom:10px}
+.svc.hot .svc-name{color:#fff}
+.svc-sub{font-size:.875rem;color:var(--muted);margin-bottom:24px;line-height:1.6;font-weight:300}
+.svc.hot .svc-sub{color:rgba(255,255,255,.55)}
+.svc-line{height:1px;background:var(--border);margin-bottom:22px}
+.svc.hot .svc-line{background:rgba(255,255,255,.1)}
+.svc-list{list-style:none;display:flex;flex-direction:column;gap:11px;flex:1}
+.svc-item{display:flex;align-items:flex-start;gap:9px;font-size:.875rem;line-height:1.5}
+.svc.hot .svc-item{color:rgba(255,255,255,.85)}
+.svc-check{width:15px;height:15px;flex-shrink:0;margin-top:2px}
+.svc-check path{stroke:var(--green)}
+.svc.hot .svc-check path{stroke:var(--amber)}
+.svc-btn{margin-top:26px}
+
+/* ── GALLERY ── */
+.gallery-strip{margin-top:52px;display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+.gallery-item{aspect-ratio:9/14;border-radius:var(--r);overflow:hidden;position:relative;cursor:pointer}
+.gallery-item img{width:100%;height:100%;object-fit:cover;object-position:top;display:block;transition:transform .4s cubic-bezier(.25,.46,.45,.94),filter .4s}
+.gallery-item:hover img{transform:scale(1.05);filter:brightness(.8)}
+.gallery-item-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.5) 0%,transparent 50%);opacity:0;transition:opacity .3s;display:flex;align-items:flex-end;padding:12px}
+.gallery-item:hover .gallery-item-overlay{opacity:1}
+.gallery-ig{font-size:.6875rem;color:rgba(255,255,255,.8);display:flex;align-items:center;gap:4px}
+
+/* ── CASES ── */
+.cases-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:52px}
+.case{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;transition:all .3s}
+.case:hover{box-shadow:var(--sh-md);transform:translateY(-2px)}
+.case-head{padding:22px 22px 18px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.case-car{font-weight:500;font-size:.9375rem;margin-bottom:3px}
+.case-year{font-size:.8125rem;color:var(--muted);font-weight:300}
+.tag{display:inline-flex;align-items:center;padding:4px 10px;border-radius:100px;font-size:.6875rem;font-weight:600;white-space:nowrap}
+.tag-red{background:#FDE8E6;color:var(--red)}
+.tag-green{background:#E6F4ED;color:var(--green)}
+.case-body{padding:18px 22px 22px}
+.case-findings{list-style:none;display:flex;flex-direction:column;gap:9px}
+.case-finding{display:flex;align-items:flex-start;gap:7px;font-size:.8125rem;color:var(--muted);line-height:1.5}
+.case-finding::before{content:'—';flex-shrink:0;color:var(--light)}
+.case-save{margin-top:14px;padding:10px 14px;border-radius:var(--r);font-size:.8125rem;font-weight:500}
+.case-save-bad{background:#FDE8E6;color:var(--red)}
+.case-save-ok{background:#E6F4ED;color:var(--green)}
+
+/* ── TRUST ── */
+.trust-nums{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.06);border-radius:var(--r-lg);overflow:hidden;margin-top:56px}
+.tnum{padding:36px 28px;background:rgba(255,255,255,.03);transition:background .2s}
+.tnum:hover{background:rgba(255,255,255,.06)}
+.tnum-n{font-family:var(--font-h);font-size:2.75rem;font-weight:500;letter-spacing:-.025em;line-height:1;color:#fff;margin-bottom:8px}
+.tnum-n span{color:var(--amber)}
+.tnum-l{font-size:.875rem;color:rgba(255,255,255,.45);font-weight:300;line-height:1.5}
+
+/* ── REVIEWS ── */
+.reviews-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:52px}
+.rev{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:26px;transition:all .3s}
+.rev:hover{border-color:var(--amber);box-shadow:var(--sh)}
+.stars{display:flex;gap:2px;margin-bottom:14px}
+.star{color:#F5A623;font-size:.875rem}
+.rev-text{font-family:var(--font-h);font-style:italic;font-size:1rem;line-height:1.7;color:var(--text);margin-bottom:18px}
+.rev-author{display:flex;align-items:center;gap:10px}
+.rev-av{width:34px;height:34px;border-radius:50%;background:var(--sand);display:flex;align-items:center;justify-content:center;font-family:var(--font-h);font-size:.9375rem;font-weight:500;color:var(--navy);flex-shrink:0}
+.rev-name{font-size:.875rem;font-weight:500}
+.rev-meta{font-size:.75rem;color:var(--muted);font-weight:300}
+
+/* ── CITIES ── */
+.cities-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-top:44px}
+.city{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:26px 12px;text-align:center;transition:all .25s;cursor:default}
+.city:hover{border-color:var(--amber);background:var(--amber);color:#111}
+.city:hover .city-ico{color:#111}
+.city:hover .city-tag{color:rgba(0,0,0,.5)}
+.city-ico{margin:0 auto 10px;color:var(--muted);transition:color .25s}
+.city-name{font-size:.875rem;font-weight:500;margin-bottom:3px}
+.city-tag{font-size:.6875rem;color:var(--light);letter-spacing:.03em}
+
+/* ── FAQ ── */
+.faq{margin-top:52px;border-top:1px solid var(--border)}
+.faq-item{border-bottom:1px solid var(--border)}
+.faq-q{width:100%;display:flex;align-items:center;justify-content:space-between;padding:22px 0;background:none;border:none;cursor:pointer;text-align:left;gap:24px;font-family:var(--font-b);font-size:.9375rem;font-weight:500;color:var(--text);transition:color .2s}
+.faq-q:hover{color:var(--amber)}
+.faq-ico{width:24px;height:24px;flex-shrink:0;border:1px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--muted);transition:all .3s}
+.faq-item.open .faq-ico{background:var(--amber);border-color:var(--amber);color:#111;transform:rotate(45deg)}
+.faq-a{display:none;padding-bottom:22px;font-size:.9375rem;color:var(--muted);line-height:1.75;font-weight:300;max-width:680px}
+.faq-item.open .faq-a{display:block}
+
+/* ── CTA FINAL ── */
+.cta-box{background:var(--dark);border-radius:20px;padding:clamp(48px,6vw,80px);position:relative;overflow:hidden;text-align:center}
+.cta-box::before{content:'';position:absolute;top:-80px;right:-80px;width:280px;height:280px;border-radius:50%;border:1px solid rgba(255,255,255,.05);pointer-events:none}
+.cta-box::after{content:'';position:absolute;bottom:-100px;left:-60px;width:360px;height:360px;border-radius:50%;border:1px solid rgba(255,255,255,.04);pointer-events:none}
+.cta-accent{display:inline-block;width:40px;height:3px;background:var(--amber);border-radius:2px;margin-bottom:24px}
+.cta-h{font-family:var(--font-h);font-size:clamp(2rem,4vw,3.25rem);font-weight:500;line-height:1.1;color:#fff;letter-spacing:-.02em;margin-bottom:14px;position:relative;z-index:1}
+.cta-p{font-size:1rem;color:rgba(255,255,255,.5);margin-bottom:36px;font-weight:300;position:relative;z-index:1}
+.cta-acts{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;position:relative;z-index:1}
+.cta-contact{margin-top:28px;font-size:.875rem;color:rgba(255,255,255,.3);position:relative;z-index:1}
+.cta-contact a{color:rgba(255,255,255,.55);text-decoration:none;transition:color .2s}
+.cta-contact a:hover{color:#fff}
+
+/* ── FOOTER ── */
+footer{background:var(--dark2);padding:40px 0}
+.foot{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.foot-links{display:flex;gap:24px;list-style:none}
+.foot-links a{color:rgba(255,255,255,.35);text-decoration:none;font-size:.875rem;transition:color .2s}
+.foot-links a:hover{color:rgba(255,255,255,.7)}
+.foot-copy{font-size:.8125rem;color:rgba(255,255,255,.2)}
+
+/* ── FLOAT WA ── */
+.float-wa{position:fixed;bottom:26px;right:26px;z-index:200;width:54px;height:54px;border-radius:50%;background:var(--wa);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,211,102,.45);text-decoration:none;transition:all .3s}
+.float-wa:hover{transform:scale(1.1);box-shadow:0 6px 28px rgba(37,211,102,.55)}
+.float-wa svg{fill:#fff}
+.wa-pulse{position:absolute;inset:0;border-radius:50%;background:var(--wa);animation:pulse 2.5s ease-out infinite}
+@keyframes pulse{0%{opacity:.5;transform:scale(1)}100%{opacity:0;transform:scale(1.85)}}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1024px){
+  .nav-links,.nav-end .btn-ghost{display:none}
+  .burger{display:flex}
+  .hero{grid-template-columns:1fr}
+  .hero-right{display:none}
+  .process-wrap{grid-template-columns:repeat(2,1fr);gap:32px}
+  .process-line{display:none}
+  .trust-nums{grid-template-columns:repeat(2,1fr)}
+  .cities-grid{grid-template-columns:repeat(3,1fr)}
+  .expert-grid{grid-template-columns:1fr}
+  .expert-photo-wrap{min-height:400px}
+}
+@media(max-width:768px){
+  .svc-grid,.cases-grid,.reviews-grid{grid-template-columns:1fr}
+  .pains-grid{grid-template-columns:1fr}
+  .gallery-strip{grid-template-columns:repeat(3,1fr)}
+  .hstat:not(:first-child){padding-left:16px}
+}
+@media(max-width:480px){
+  .hero-stats{flex-direction:column;gap:20px;border-top:none;padding-top:0}
+  .hstat{border:none!important;padding:0!important}
+  .hero-actions{flex-direction:column;align-items:stretch}
+  .hero-actions .btn{justify-content:center}
+  .trust-nums{grid-template-columns:1fr}
+  .cities-grid{grid-template-columns:repeat(2,1fr)}
+  .process-wrap{grid-template-columns:1fr}
+  .gallery-strip{grid-template-columns:repeat(2,1fr)}
+  .cta-acts{flex-direction:column}
+  .cta-acts .btn{width:100%;justify-content:center}
+  .foot{flex-direction:column;align-items:flex-start}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<header id="hdr">
+  <div class="wrap">
+    <nav class="nav">
+      <a href="#" class="logo" aria-label="ТЛЕК Автоподбор">
+        <div class="logo-icon">
+          <svg width="17" height="17" viewBox="0 0 18 18"><path d="M2 13l2-6h10l2 6H2zm2.5-1h9l-1-3h-7l-1 3zM4 14h10v1H4v-1zM5.5 11.5a1 1 0 110 2 1 1 0 010-2zm7 0a1 1 0 110 2 1 1 0 010-2z"/></svg>
+        </div>
+        <div>
+          <div class="logo-name">ТЛЕК</div>
+          <div class="logo-sub">Автоподбор</div>
+        </div>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="#services">Услуги</a></li>
+        <li><a href="#expert">Эксперт</a></li>
+        <li><a href="#cases">Кейсы</a></li>
+        <li><a href="#reviews">Отзывы</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+
+      <div class="nav-end">
+        <a href="tel:+77475127095" class="btn btn-ghost" style="font-size:.8125rem">+7 747 512 70 95</a>
+        <a href="https://wa.me/77475127095" class="btn btn-amber" target="_blank" rel="noopener">WhatsApp</a>
+        <button class="burger" id="burger" aria-label="Меню"><span></span><span></span><span></span></button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<div class="mob-nav" id="mobnav">
+  <a href="#services" onclick="closeNav()">Услуги</a>
+  <a href="#expert" onclick="closeNav()">Эксперт</a>
+  <a href="#cases" onclick="closeNav()">Кейсы</a>
+  <a href="#reviews" onclick="closeNav()">Отзывы</a>
+  <a href="#faq" onclick="closeNav()">FAQ</a>
+  <a href="https://wa.me/77475127095" class="btn btn-wa" target="_blank" rel="noopener" style="margin-top:8px;justify-content:center">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    Написать
+  </a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow r">Казахстан · 6 городов · с 2022 года</div>
+    <h1 class="hero-h1 r d1">
+      Купите авто<br>без риска —<br><em>проверим</em> за вас
+    </h1>
+    <p class="hero-p r d2">
+      Диагностируем техническое состояние, находим скрытые повреждения и проверяем юридическую чистоту — до того, как вы отдадите деньги.
+    </p>
+    <div class="hero-actions r d3">
+      <a href="https://wa.me/77475127095?text=Хочу%20заказать%20осмотр%20автомобиля" class="btn btn-amber btn-lg" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="#111"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Заказать проверку
+      </a>
+      <a href="#services" class="btn btn-outline-light btn-lg">Смотреть услуги</a>
+    </div>
+    <div class="hero-stats r d4">
+      <div class="hstat">
+        <div class="hstat-n">15к+</div>
+        <div class="hstat-l">Подписчиков<br>в Instagram</div>
+      </div>
+      <div class="hstat">
+        <div class="hstat-n">6</div>
+        <div class="hstat-l">Городов<br>Казахстана</div>
+      </div>
+      <div class="hstat">
+        <div class="hstat-n">3+</div>
+        <div class="hstat-l">Года<br>работы</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <img
+      src="tilek_avtopodbor_profile_2026-06-28T08-56-45-160Z/2026-02-27_tilek_avtopodbor_DVREYByiB-B/tilek_avtopodbor_DVREYByiB-B_3841871200498753409.jpg"
+      alt="Проверка автомобиля перед покупкой"
+      class="hero-photo"
+    >
+    <div class="hero-photo-overlay"></div>
+  </div>
+
+  <div class="hero-scroll">
+    <span>Листать</span>
+    <div class="hero-scroll-line"></div>
+  </div>
+</section>
+
+<!-- PAINS -->
+<section class="sec sec-light" id="why">
+  <div class="wrap">
+    <div class="sec-tag r">Почему это важно</div>
+    <h2 class="sec-h r">Вторичный рынок скрывает<br>больше, чем кажется</h2>
+    <p class="sec-p r">Каждый третий автомобиль имеет скрытые дефекты или проблемы с документами. Осмотр — страховка от потери денег.</p>
+
+    <div class="pains-grid">
+      <div class="pain r">
+        <svg class="pain-ico" width="36" height="36" viewBox="0 0 36 36" fill="none">
+          <path d="M18 4L32 28H4L18 4z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+          <path d="M18 15v7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="18" cy="25" r="1" fill="currentColor"/>
+        </svg>
+        <div class="pain-t">Скрытые повреждения кузова</div>
+        <div class="pain-d">Шпаклёвка под краской, варёные лонжероны, следы серьёзных ДТП — всё это видно только со сканером толщиномера.</div>
+      </div>
+      <div class="pain r d1">
+        <svg class="pain-ico" width="36" height="36" viewBox="0 0 36 36" fill="none">
+          <circle cx="18" cy="18" r="12" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M18 11v7l5 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <div class="pain-t">Скрученный пробег</div>
+        <div class="pain-d">Откатывают 50–150 тыс. км чтобы завысить цену. Реальный пробег виден по нескольким узлам и по износу деталей.</div>
+      </div>
+      <div class="pain r d2">
+        <svg class="pain-ico" width="36" height="36" viewBox="0 0 36 36" fill="none">
+          <rect x="7" y="9" width="22" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M7 16h22" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M13 22h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <div class="pain-t">Юридические риски</div>
+        <div class="pain-d">Залог у банка, арест, угон, ограничения на регистрацию — вы рискуете потерять машину сразу после покупки.</div>
+      </div>
+      <div class="pain r">
+        <svg class="pain-ico" width="36" height="36" viewBox="0 0 36 36" fill="none">
+          <circle cx="18" cy="13" r="5" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M9 28c0-5 4-9 9-9s9 4 9 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <div class="pain-t">Автомобиль из такси</div>
+        <div class="pain-d">Реальный пробег 400–600 тыс. км при показаниях 80 тыс. Износ критический — но внешне всё может выглядеть идеально.</div>
+      </div>
+      <div class="pain r d1">
+        <svg class="pain-ico" width="36" height="36" viewBox="0 0 36 36" fill="none">
+          <path d="M18 6C11 6 6 11 6 18c0 4 2 7.5 5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M18 6c7 0 12 5 12 12 0 4-2 7.5-5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M13 18h10M18 13v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <div class="pain-t">Авто из России</div>
+        <div class="pain-d">Санкционные ограничения на запчасти, нестандартные комплектации, особый режим обслуживания — нужно знать до покупки.</div>
+      </div>
+      <div class="pain r d2">
+        <svg class="pain-ico" width="36" height="36" viewBox="0 0 36 36" fill="none">
+          <path d="M10 28V17l8-9 8 9v11" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+          <rect x="15" y="21" width="6" height="7" rx="1" stroke="currentColor" stroke-width="1.5"/>
+        </svg>
+        <div class="pain-t">Переплата за «идеал»</div>
+        <div class="pain-d">Продавец называет цену выше рынка. Эксперт определит реальную стоимость и поможет торговаться со знанием дефектов.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERT -->
+<section class="sec sec-dark on-dark" id="expert">
+  <div class="wrap">
+    <div class="sec-tag r">Эксперт</div>
+    <h2 class="sec-h r">Живой специалист,<br>не колл-центр</h2>
+
+    <div class="expert-grid r">
+      <div class="expert-photo-wrap">
+        <img
+          src="tilek_avtopodbor_profile_2026-06-28T08-56-45-160Z/2026-04-28_tilek_avtopodbor_DXqsyLLiOAa/tilek_avtopodbor_DXqsyLLiOAa_3885114590585479194.jpg"
+          alt="Тлек — эксперт по автоподбору"
+          class="expert-photo"
+        >
+        <div class="expert-photo-gradient"></div>
+        <div class="expert-badge">
+          <span class="expert-badge-name">Тлек</span>
+          <span class="expert-badge-role">Эксперт · Автоподбор</span>
+        </div>
+      </div>
+
+      <div class="expert-info">
+        <p class="expert-quote">
+          Я проверяю сотни автомобилей и знаю все способы скрыть дефекты. Задача — сделать так, чтобы вы видели машину такой, какая она есть, а не такой, какой её хочет показать продавец.
+        </p>
+        <div class="expert-creds">
+          <div class="expert-cred"><div class="expert-cred-dot"></div>Работает с 2022 года — более 3 лет практики на казахстанском рынке</div>
+          <div class="expert-cred"><div class="expert-cred-dot"></div>15 000+ подписчиков в Instagram, открытые разборы и реальные кейсы</div>
+          <div class="expert-cred"><div class="expert-cred-dot"></div>Профессиональное оборудование: толщиномер, сканер ошибок, видеофиксация</div>
+          <div class="expert-cred"><div class="expert-cred-dot"></div>Покрытие — 6 городов Казахстана: Алматы, Астана, Шымкент, Кар-да, Кос-й, Павлодар</div>
+        </div>
+        <div class="expert-socials">
+          <a href="https://www.instagram.com/tilek_avtopodbor/" class="expert-social" target="_blank" rel="noopener">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
+            @tilek_avtopodbor
+          </a>
+          <a href="https://wa.me/77475127095" class="expert-social" target="_blank" rel="noopener">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            WhatsApp
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="sec sec-light" id="process">
+  <div class="wrap">
+    <div class="sec-tag r">Процесс работы</div>
+    <h2 class="sec-h r">Четыре шага от заявки<br>до уверенной покупки</h2>
+    <p class="sec-p r">Быстро, прозрачно, без лишних слов. Получаете чёткий ответ — брать или нет.</p>
+
+    <div class="process-wrap">
+      <div class="process-line"></div>
+      <div class="step r">
+        <div class="step-n">1</div>
+        <div class="step-t">Пишете нам</div>
+        <div class="step-d">Сообщаете город, марку и модель. Назначаем удобное время — обычно 1–2 дня.</div>
+      </div>
+      <div class="step r d1">
+        <div class="step-n">2</div>
+        <div class="step-t">Выезд к продавцу</div>
+        <div class="step-d">Эксперт приезжает с профессиональным оборудованием. Продавец только передаёт ключи.</div>
+      </div>
+      <div class="step r d2">
+        <div class="step-n">3</div>
+        <div class="step-t">Детальная проверка</div>
+        <div class="step-d">Кузов, ЛКП, ходовая, двигатель, трансмиссия, история, документы. Всё фиксируем на видео.</div>
+      </div>
+      <div class="step r d3">
+        <div class="step-n">4</div>
+        <div class="step-t">Отчёт и решение</div>
+        <div class="step-d">Понятный отчёт с фотографиями и чёткая рекомендация: покупать или искать дальше.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="sec sec-sand" id="services">
+  <div class="wrap">
+    <div class="sec-tag r">Услуги</div>
+    <h2 class="sec-h r">Выберите формат<br>проверки</h2>
+    <p class="sec-p r">Не знаете что подходит — напишите, подскажем под ваш случай.</p>
+
+    <div class="svc-grid">
+      <div class="svc r">
+        <div class="svc-n">01</div>
+        <div class="svc-name">Базовый<br>минимум</div>
+        <div class="svc-sub">Быстрая проверка ключевых узлов — выявляем критические дефекты</div>
+        <div class="svc-line"></div>
+        <ul class="svc-list">
+          <li class="svc-item"><svg class="svc-check" viewBox="0 0 15 15" fill="none"><path d="M3 7.5l3 3 6-6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Визуальный осмотр кузова и ЛКП</li>
+          <li class="svc-item"><svg class="svc-check" viewBox="0 0 15 15" fill="none"><path d="M3 7.5l3 3 6-6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Проверка толщиномером</li>
+          <li class="svc-item"><svg class="svc-check" viewBox="0 0 15 15" fill="none"><path d="M3 7.5l3 3 6-6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Осмотр ходовой и подвески</li>
+          <li class="svc-item"><svg class="svc-check" viewBox="0 0 15 15" fill="none"><path d="M3 7.5l3 3 6-6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Визуальный осмотр двигателя</li>
+          <li class="svc-item"><svg class="svc-check" viewBox="0 0 15 15" fill="none"><path d="M3 7.5l3 3 6-6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Устная рекомендация по покупке</li>
+        </ul>
+        <div class="svc-btn">
+          <a href="https://wa.me/77475127095?text=Базовый%20осмотр" class="btn btn-outline-dark" style="width:100%;justify-content:center" target="_blank" rel="noopener">Заказать осмотр</a>
+        </div>
+      </div>
+
+      <div class="svc hot r d1">
+        <div class="svc-pill">Рекомендуем</div>
+        <div class="svc-n">02</div>
+        <div class="svc-name" style="color:#fff">Полный<br>автоподбор</div>
+        <div class="svc-sub">Комплексная проверка — максимальная защита перед покупкой</div>
+        <div class="svc-line"></div>
+        <ul class="svc-list">
+          <li class="svc-item"><svg class="svc-check" viewBox="0 0 15 15" fill="none"><path d="M3 7.5l3 3 6-6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Всё из пакета «Базовый»</li>
+          <li class="svc-item"><svg class="svc-check" viewBox="0 0 15 15" fill="none"><path d="M3 7.5l3 3 6-6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Компьютерная диагностика ошибок</li>
+          <li class="svc-item"><svg class="svc-check" viewBox="0 0 15 15" fill="none"><path d="M3 7.5l3 3 6-6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>История ДТП и реальный пробег</li>
+          <li class="svc-item"><svg class="svc-check" viewBox="0 0 15 15" fill="none"><path d="M3 7.5l3 3 6-6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Юридическая чистота (залог, угон)</li>
+          <li class="svc-item"><svg class="svc-check" viewBox="0 0 15 15" fill="none"><path d="M3 7.5l3 3 6-6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Видеоотчёт осмотра</li>
+          <li class="svc-item"><svg class="svc-check" viewBox="0 0 15 15" fill="none"><path d="M3 7.5l3 3 6-6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Помощь в торге с продавцом</li>
+        </ul>
+        <div class="svc-btn">
+          <a href="https://wa.me/77475127095?text=Полный%20автоподбор" class="btn btn-amber" style="width:100%;justify-content:center" target="_blank" rel="noopener">Заказать подбор</a>
+        </div>
+      </div>
+
+      <div class="svc r d2">
+        <div class="svc-n">03</div>
+        <div class="svc-name">Консультация<br>по выбору</div>
+        <div class="svc-sub">Разберём конкретную модель: плюсы, минусы, типичные проблемы</div>
+        <div class="svc-line"></div>
+        <ul class="svc-list">
+          <li class="svc-item"><svg class="svc-check" viewBox="0 0 15 15" fill="none"><path d="M3 7.5l3 3 6-6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Разбор марки и модели</li>
+          <li class="svc-item"><svg class="svc-check" viewBox="0 0 15 15" fill="none"><path d="M3 7.5l3 3 6-6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Типичные «болячки» и слабые места</li>
+          <li class="svc-item"><svg class="svc-check" viewBox="0 0 15 15" fill="none"><path d="M3 7.5l3 3 6-6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>На что смотреть при осмотре</li>
+          <li class="svc-item"><svg class="svc-check" viewBox="0 0 15 15" fill="none"><path d="M3 7.5l3 3 6-6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Адекватный ценовой диапазон</li>
+          <li class="svc-item"><svg class="svc-check" viewBox="0 0 15 15" fill="none"><path d="M3 7.5l3 3 6-6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Онлайн — WhatsApp или звонок</li>
+        </ul>
+        <div class="svc-btn">
+          <a href="https://wa.me/77475127095?text=Консультация%20по%20выбору%20авто" class="btn btn-outline-dark" style="width:100%;justify-content:center" target="_blank" rel="noopener">Получить консультацию</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY / Instagram -->
+<section class="sec sec-light" id="gallery">
+  <div class="wrap">
+    <div class="sec-tag r">Instagram</div>
+    <h2 class="sec-h r">Реальные разборы<br>и осмотры</h2>
+    <p class="sec-p r">204 поста с живыми кейсами, обзорами и советами. Всё открыто — подписывайтесь.</p>
+
+    <div class="gallery-strip r">
+      <a class="gallery-item" href="https://www.instagram.com/tilek_avtopodbor/" target="_blank" rel="noopener">
+        <img src="tilek_avtopodbor_profile_2026-06-28T08-56-45-160Z/2026-04-28_tilek_avtopodbor_DXqsyLLiOAa/tilek_avtopodbor_DXqsyLLiOAa_3885114590585479194.jpg" alt="Пост Instagram" loading="lazy">
+        <div class="gallery-item-overlay"><span class="gallery-ig"><svg width="12" height="12" viewBox="0 0 24 24" fill="rgba(255,255,255,.7)" stroke="rgba(255,255,255,.7)" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5" fill="none"/><circle cx="12" cy="12" r="4" fill="none"/><circle cx="17.5" cy="6.5" r="1"/></svg>Instagram</span></div>
+      </a>
+      <a class="gallery-item" href="https://www.instagram.com/tilek_avtopodbor/" target="_blank" rel="noopener">
+        <img src="tilek_avtopodbor_profile_2026-06-28T08-56-45-160Z/2026-02-27_tilek_avtopodbor_DVREYByiB-B/tilek_avtopodbor_DVREYByiB-B_3841871200498753409.jpg" alt="Пост Instagram" loading="lazy">
+        <div class="gallery-item-overlay"><span class="gallery-ig"><svg width="12" height="12" viewBox="0 0 24 24" fill="rgba(255,255,255,.7)" stroke="rgba(255,255,255,.7)" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5" fill="none"/><circle cx="12" cy="12" r="4" fill="none"/><circle cx="17.5" cy="6.5" r="1"/></svg>Instagram</span></div>
+      </a>
+      <a class="gallery-item" href="https://www.instagram.com/tilek_avtopodbor/" target="_blank" rel="noopener">
+        <img src="tilek_avtopodbor_profile_2026-06-28T08-56-45-160Z/2026-01-10_tilek_avtopodbor_DTVERI7CJOR/tilek_avtopodbor_DTVERI7CJOR_3806967830009123729.jpg" alt="Пост Instagram" loading="lazy">
+        <div class="gallery-item-overlay"><span class="gallery-ig"><svg width="12" height="12" viewBox="0 0 24 24" fill="rgba(255,255,255,.7)" stroke="rgba(255,255,255,.7)" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5" fill="none"/><circle cx="12" cy="12" r="4" fill="none"/><circle cx="17.5" cy="6.5" r="1"/></svg>Instagram</span></div>
+      </a>
+      <a class="gallery-item" href="https://www.instagram.com/tilek_avtopodbor/" target="_blank" rel="noopener">
+        <img src="tilek_avtopodbor_profile_2026-06-28T08-56-45-160Z/2026-05-06_tilek_avtopodbor_DX_UnBFIal5/tilek_avtopodbor_DX_UnBFIal5_3890919245221046649.jpg" alt="Пост Instagram" loading="lazy">
+        <div class="gallery-item-overlay"><span class="gallery-ig"><svg width="12" height="12" viewBox="0 0 24 24" fill="rgba(255,255,255,.7)" stroke="rgba(255,255,255,.7)" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5" fill="none"/><circle cx="12" cy="12" r="4" fill="none"/><circle cx="17.5" cy="6.5" r="1"/></svg>Instagram</span></div>
+      </a>
+      <a class="gallery-item" href="https://www.instagram.com/tilek_avtopodbor/" target="_blank" rel="noopener">
+        <img src="tilek_avtopodbor_profile_2026-06-28T08-56-45-160Z/2026-04-29_tilek_avtopodbor_DXtTBaSCAvl/tilek_avtopodbor_DXtTBaSCAvl_3885845713313598437.jpg" alt="Пост Instagram" loading="lazy">
+        <div class="gallery-item-overlay"><span class="gallery-ig"><svg width="12" height="12" viewBox="0 0 24 24" fill="rgba(255,255,255,.7)" stroke="rgba(255,255,255,.7)" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5" fill="none"/><circle cx="12" cy="12" r="4" fill="none"/><circle cx="17.5" cy="6.5" r="1"/></svg>Instagram</span></div>
+      </a>
+      <a class="gallery-item" href="https://www.instagram.com/tilek_avtopodbor/" target="_blank" rel="noopener">
+        <img src="tilek_avtopodbor_profile_2026-06-28T08-56-45-160Z/2026-01-22_tilek_avtopodbor_DT0H_EiCFGX/tilek_avtopodbor_DT0H_EiCFGX_3815709904808202647.jpg" alt="Пост Instagram" loading="lazy">
+        <div class="gallery-item-overlay"><span class="gallery-ig"><svg width="12" height="12" viewBox="0 0 24 24" fill="rgba(255,255,255,.7)" stroke="rgba(255,255,255,.7)" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5" fill="none"/><circle cx="12" cy="12" r="4" fill="none"/><circle cx="17.5" cy="6.5" r="1"/></svg>Instagram</span></div>
+      </a>
+    </div>
+
+    <div style="text-align:center;margin-top:28px">
+      <a href="https://www.instagram.com/tilek_avtopodbor/" class="btn btn-outline-dark btn-lg" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
+        Все 204 поста в Instagram
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- CASES -->
+<section class="sec sec-sand" id="cases">
+  <div class="wrap">
+    <div class="sec-tag r">Реальные кейсы</div>
+    <h2 class="sec-h r">Что находим<br>на осмотрах</h2>
+    <p class="sec-p r">Конкретные примеры из практики. Именно так выглядит вторичный рынок Казахстана.</p>
+
+    <div class="cases-grid">
+      <div class="case r">
+        <div class="case-head">
+          <div><div class="case-car">Toyota Land Cruiser 200</div><div class="case-year">2016 · Алматы</div></div>
+          <span class="tag tag-red">Не рекомендовали</span>
+        </div>
+        <div class="case-body">
+          <ul class="case-findings">
+            <li class="case-finding">Скрутка: реальный ~380 тыс. км вместо 130 тыс.</li>
+            <li class="case-finding">Лонжерон варили после серьёзного ДТП</li>
+            <li class="case-finding">Коррозия под пластиком порогов</li>
+            <li class="case-finding">Задний мост с утечкой масла</li>
+          </ul>
+          <div class="case-save case-save-bad">Клиент избежал потери: ~4 500 000 ₸</div>
+        </div>
+      </div>
+
+      <div class="case r d1">
+        <div class="case-head">
+          <div><div class="case-car">Honda CR-V Hybrid</div><div class="case-year">2021 · Астана</div></div>
+          <span class="tag tag-green">Рекомендовали</span>
+        </div>
+        <div class="case-body">
+          <ul class="case-findings">
+            <li class="case-finding">ЛКП в заводском состоянии, окрас ровный</li>
+            <li class="case-finding">Нет ошибок в гибридной системе</li>
+            <li class="case-finding">Документы чистые, залога нет</li>
+            <li class="case-finding">Помогли снизить цену на 350 000 ₸</li>
+          </ul>
+          <div class="case-save case-save-ok">Сэкономили на торге: 350 000 ₸</div>
+        </div>
+      </div>
+
+      <div class="case r d2">
+        <div class="case-head">
+          <div><div class="case-car">Subaru Forester</div><div class="case-year">2018 · Шымкент</div></div>
+          <span class="tag tag-red">Не рекомендовали</span>
+        </div>
+        <div class="case-body">
+          <ul class="case-findings">
+            <li class="case-finding">Работа в такси: 470 тыс. реальный пробег</li>
+            <li class="case-finding">Критический износ АКПП, течь масла</li>
+            <li class="case-finding">Задиры цилиндров — ремонт двигателя</li>
+            <li class="case-finding">ЛКП в 5 панелях — следы восстановления</li>
+          </ul>
+          <div class="case-save case-save-bad">Потенциальный ремонт: ~1 800 000 ₸</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST -->
+<section class="sec sec-dark on-dark" id="trust">
+  <div class="wrap">
+    <div class="sec-tag r">Почему доверяют</div>
+    <h2 class="sec-h r">Цифры говорят<br>сами за себя</h2>
+    <p class="sec-p r">Репутация строится на честности и открытости, а не на обещаниях.</p>
+
+    <div class="trust-nums">
+      <div class="tnum r">
+        <div class="tnum-n">15 000<span>+</span></div>
+        <div class="tnum-l">Подписчиков в Instagram доверяют экспертизе Тлека</div>
+      </div>
+      <div class="tnum r d1">
+        <div class="tnum-n"><span>6</span></div>
+        <div class="tnum-l">Городов Казахстана: Алматы, Астана, Шымкент, Кар-да, Кос-й, Павлодар</div>
+      </div>
+      <div class="tnum r d2">
+        <div class="tnum-n">3<span>+</span></div>
+        <div class="tnum-l">Года работы на казахстанском рынке автоподбора</div>
+      </div>
+      <div class="tnum r d3">
+        <div class="tnum-n">204</div>
+        <div class="tnum-l">Публикации с реальными кейсами в открытом доступе</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="sec sec-light" id="reviews">
+  <div class="wrap">
+    <div class="sec-tag r">Отзывы</div>
+    <h2 class="sec-h r">Клиенты о нашей<br>работе</h2>
+    <p class="sec-p r">Реальные отзывы из Instagram — без анонимов.</p>
+
+    <div class="reviews-grid">
+      <div class="rev r">
+        <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+        <div class="rev-text">«Хотел взять Prado за 18 млн. Тлек нашёл скрутку и следы кузовного ремонта. Продавец уверял — машина "идеальная". Спасибо, что уберёг.»</div>
+        <div class="rev-author">
+          <div class="rev-av">Д</div>
+          <div><div class="rev-name">Дамир А.</div><div class="rev-meta">Алматы · Land Cruiser Prado</div></div>
+        </div>
+      </div>
+      <div class="rev r d1">
+        <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+        <div class="rev-text">«Camry — нашёл мелкие недостатки и помог снизить цену на 400 тысяч. Работой очень доволен, рекомендую всем, кто покупает на вторичке.»</div>
+        <div class="rev-author">
+          <div class="rev-av">А</div>
+          <div><div class="rev-name">Алибек С.</div><div class="rev-meta">Астана · Toyota Camry 70</div></div>
+        </div>
+      </div>
+      <div class="rev r d2">
+        <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+        <div class="rev-text">«Первый раз покупала авто — боялась нарваться на проблемный. Тлек всё объяснил и нашли чистую машину с первого просмотра.»</div>
+        <div class="rev-author">
+          <div class="rev-av">М</div>
+          <div><div class="rev-name">Мадина К.</div><div class="rev-meta">Шымкент · Honda CR-V</div></div>
+        </div>
+      </div>
+      <div class="rev r">
+        <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+        <div class="rev-text">«Уберёг от Subaru из такси. По виду — отличная, реальный пробег почти 500 тысяч. Деньги сэкономлены, нервы тоже.»</div>
+        <div class="rev-author">
+          <div class="rev-av">Р</div>
+          <div><div class="rev-name">Руслан Б.</div><div class="rev-meta">Алматы · Subaru Outback</div></div>
+        </div>
+      </div>
+      <div class="rev r d1">
+        <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+        <div class="rev-text">«Звал на несколько просмотров — каждый раз что-то находил. В итоге взяли четвёртый вариант — идеальный. Так и надо работать.»</div>
+        <div class="rev-author">
+          <div class="rev-av">Е</div>
+          <div><div class="rev-name">Ерлан Т.</div><div class="rev-meta">Астана · BMW 5 серии</div></div>
+        </div>
+      </div>
+      <div class="rev r d2">
+        <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+        <div class="rev-text">«Помог с выбором Li L9. Объяснил нюансы китайских машин, рассказал о сервисе. Машина год — полный порядок. Спасибо за честность!»</div>
+        <div class="rev-author">
+          <div class="rev-av">Н</div>
+          <div><div class="rev-name">Нурлан М.</div><div class="rev-meta">Алматы · Li L9</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CITIES -->
+<section class="sec sec-sand" id="cities">
+  <div class="wrap">
+    <div class="sec-tag r">География</div>
+    <h2 class="sec-h r">Работаем в 6 городах<br>Казахстана</h2>
+    <p class="sec-p r">Не нашли свой город — напишите. Постоянно расширяемся.</p>
+
+    <div class="cities-grid">
+      <div class="city r">
+        <svg class="city-ico" width="26" height="26" viewBox="0 0 26 26" fill="none"><path d="M13 4C9 4 6 7 6 11c0 5.5 7 13 7 13s7-7.5 7-13c0-4-3-7-7-7z" stroke="currentColor" stroke-width="1.5"/><circle cx="13" cy="11" r="2.5" stroke="currentColor" stroke-width="1.5"/></svg>
+        <div class="city-name">Алматы</div>
+        <div class="city-tag">Доступно</div>
+      </div>
+      <div class="city r d1">
+        <svg class="city-ico" width="26" height="26" viewBox="0 0 26 26" fill="none"><path d="M13 4C9 4 6 7 6 11c0 5.5 7 13 7 13s7-7.5 7-13c0-4-3-7-7-7z" stroke="currentColor" stroke-width="1.5"/><circle cx="13" cy="11" r="2.5" stroke="currentColor" stroke-width="1.5"/></svg>
+        <div class="city-name">Астана</div>
+        <div class="city-tag">Доступно</div>
+      </div>
+      <div class="city r d2">
+        <svg class="city-ico" width="26" height="26" viewBox="0 0 26 26" fill="none"><path d="M13 4C9 4 6 7 6 11c0 5.5 7 13 7 13s7-7.5 7-13c0-4-3-7-7-7z" stroke="currentColor" stroke-width="1.5"/><circle cx="13" cy="11" r="2.5" stroke="currentColor" stroke-width="1.5"/></svg>
+        <div class="city-name">Шымкент</div>
+        <div class="city-tag">Доступно</div>
+      </div>
+      <div class="city r d3">
+        <svg class="city-ico" width="26" height="26" viewBox="0 0 26 26" fill="none"><path d="M13 4C9 4 6 7 6 11c0 5.5 7 13 7 13s7-7.5 7-13c0-4-3-7-7-7z" stroke="currentColor" stroke-width="1.5"/><circle cx="13" cy="11" r="2.5" stroke="currentColor" stroke-width="1.5"/></svg>
+        <div class="city-name">Караганда</div>
+        <div class="city-tag">Доступно</div>
+      </div>
+      <div class="city r d4">
+        <svg class="city-ico" width="26" height="26" viewBox="0 0 26 26" fill="none"><path d="M13 4C9 4 6 7 6 11c0 5.5 7 13 7 13s7-7.5 7-13c0-4-3-7-7-7z" stroke="currentColor" stroke-width="1.5"/><circle cx="13" cy="11" r="2.5" stroke="currentColor" stroke-width="1.5"/></svg>
+        <div class="city-name">Костанай</div>
+        <div class="city-tag">Доступно</div>
+      </div>
+      <div class="city r d5">
+        <svg class="city-ico" width="26" height="26" viewBox="0 0 26 26" fill="none"><path d="M13 4C9 4 6 7 6 11c0 5.5 7 13 7 13s7-7.5 7-13c0-4-3-7-7-7z" stroke="currentColor" stroke-width="1.5"/><circle cx="13" cy="11" r="2.5" stroke="currentColor" stroke-width="1.5"/></svg>
+        <div class="city-name">Павлодар</div>
+        <div class="city-tag">Доступно</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="sec sec-light" id="faq">
+  <div class="wrap" style="max-width:800px">
+    <div class="sec-tag r">Частые вопросы</div>
+    <h2 class="sec-h r">Ответы на популярные<br>вопросы</h2>
+
+    <div class="faq r">
+      <div class="faq-item">
+        <button class="faq-q">Сколько стоит осмотр?
+          <div class="faq-ico"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M5 1v8M1 5h8"/></svg></div>
+        </button>
+        <div class="faq-a">Стоимость зависит от пакета и города. Напишите в WhatsApp — сориентируем за минуту. Гарантируем: цена осмотра окупается уже на первом найденном дефекте.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Как быстро приедет эксперт?
+          <div class="faq-ico"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M5 1v8M1 5h8"/></svg></div>
+        </button>
+        <div class="faq-a">Обычно организуем осмотр в течение 1–2 дней. Если ситуация срочная — стараемся ускорить. Напишите и согласуем дату прямо сейчас.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Нужен ли продавец на осмотре?
+          <div class="faq-ico"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M5 1v8M1 5h8"/></svg></div>
+        </button>
+        <div class="faq-a">Да, продавец должен присутствовать и предоставить доступ к автомобилю. Вы просто сообщаете нам адрес — мы организуем встречу.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Помогаете только с осмотром или с поиском тоже?
+          <div class="faq-ico"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M5 1v8M1 5h8"/></svg></div>
+        </button>
+        <div class="faq-a">Основной формат — осмотр автомобиля, который вы уже нашли. Плюс консультации по выбору модели. Если нужен полный подбор «под ключ» — обсудим индивидуально.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Работаете ли вы с новыми автомобилями?
+          <div class="faq-ico"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M5 1v8M1 5h8"/></svg></div>
+        </button>
+        <div class="faq-a">Специализируемся на вторичном рынке. Новые авто у официальных дилеров осмотр не требуют. Если «новый» китайский с пробегом — это уже наш профиль.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="sec" style="padding:clamp(40px,6vw,72px) 0">
+  <div class="wrap">
+    <div class="cta-box r">
+      <div class="cta-accent"></div>
+      <h2 class="cta-h">Готовы к безопасной<br>покупке автомобиля?</h2>
+      <p class="cta-p">Напишите сейчас — ответим на вопросы и назначим осмотр. Без обязательств.</p>
+      <div class="cta-acts">
+        <a href="https://wa.me/77475127095?text=Хочу%20заказать%20осмотр%20автомобиля" class="btn btn-amber btn-lg" target="_blank" rel="noopener">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="#111"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Написать в WhatsApp
+        </a>
+        <a href="tel:+77475127095" class="btn btn-outline-light btn-lg">+7 747 512 70 95</a>
+      </div>
+      <div class="cta-contact">Или найдите нас в &nbsp;<a href="https://www.instagram.com/tilek_avtopodbor/" target="_blank" rel="noopener">Instagram @tilek_avtopodbor</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <a href="#" class="logo" style="opacity:.7">
+        <div class="logo-icon" style="opacity:.6"><svg width="17" height="17" viewBox="0 0 18 18" fill="#111"><path d="M2 13l2-6h10l2 6H2zm2.5-1h9l-1-3h-7l-1 3zM4 14h10v1H4v-1zM5.5 11.5a1 1 0 110 2 1 1 0 010-2zm7 0a1 1 0 110 2 1 1 0 010-2z"/></svg></div>
+        <div><div class="logo-name">ТЛЕК</div><div class="logo-sub">Автоподбор</div></div>
+      </a>
+      <ul class="foot-links">
+        <li><a href="#services">Услуги</a></li>
+        <li><a href="#cases">Кейсы</a></li>
+        <li><a href="#reviews">Отзывы</a></li>
+        <li><a href="https://www.instagram.com/tilek_avtopodbor/" target="_blank" rel="noopener">Instagram</a></li>
+        <li><a href="https://wa.me/77475127095" target="_blank" rel="noopener">WhatsApp</a></li>
+      </ul>
+      <div class="foot-copy">© 2022–2026 ТЛЕК Автоподбор</div>
+    </div>
+  </div>
+</footer>
+
+<!-- FLOAT WA -->
+<a href="https://wa.me/77475127095" class="float-wa" target="_blank" rel="noopener" aria-label="WhatsApp">
+  <div class="wa-pulse"></div>
+  <svg width="26" height="26" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<script>
+// Header scroll
+const hdr = document.getElementById('hdr');
+window.addEventListener('scroll', () => hdr.classList.toggle('scrolled', scrollY > 30), {passive:true});
+
+// Mobile nav
+const burger = document.getElementById('burger');
+const mobnav = document.getElementById('mobnav');
+burger.addEventListener('click', () => mobnav.classList.toggle('open'));
+function closeNav(){ mobnav.classList.remove('open') }
+
+// Reveal
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); obs.unobserve(e.target) } });
+}, {threshold: 0.1, rootMargin:'0px 0px -36px 0px'});
+document.querySelectorAll('.r').forEach(el => obs.observe(el));
+
+// Hero immediate reveal
+window.addEventListener('load', () => {
+  document.querySelectorAll('.hero .r').forEach((el,i) => setTimeout(() => el.classList.add('in'), 80 + i*80));
+});
+
+// FAQ
+document.querySelectorAll('.faq-q').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const item = btn.parentElement;
+    const open = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if(!open) item.classList.add('open');
+  });
+});
+
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const t = document.querySelector(a.getAttribute('href'));
+    if(t){ e.preventDefault(); t.scrollIntoView({behavior:'smooth'}) }
+  });
+});
+</script>
+</body>
+</html>
